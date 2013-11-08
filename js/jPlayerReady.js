@@ -5,10 +5,10 @@ $(document).ready(function(){
     $("#jquery_jplayer_1").jPlayer({
         ready : function() {
             $(this).jPlayer("setMedia", {
-                oga : "./audio/DefianceNew.ogg"
+                mp3 : "./audio/Brutal_Whiskers_-_02_-_.mp3"
             });
         },
         swfPath : "./jPlayer",
-        supplied : "oga"
+        supplied: "mp3"
     });
 });
