@@ -1,0 +1,22 @@
+{
+    "data": {
+
+        "tracks" : [
+            {
+                "title" : "Brutal Whiskers",
+
+                "audio" : "./audio/Brutal_Whiskers_-_02_-_.mp3"
+            },
+            {
+                "title" : "Sentimental Seek",
+
+                "audio" : "./audio/Sally_Seltmann_-_01_-_Sentimental_Seek.mp3"
+            },
+            {
+                "title" : "Exfoliated Rust",
+
+                "audio" : "./audio/We_Are_All_Alone_-_05_-_Exfoliated_Rust.mp3"
+            }
+        ]
+    }
+}
