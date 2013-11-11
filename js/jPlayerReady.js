@@ -25,13 +25,33 @@ function jPlayerCreate(jPlayerId) {
     });
     var options = {
         swfPath : "./jPlayer",
-        supplied : "mp3"
+        supplied : "mp3",
+        loop : true,
+        globalVolume: true
     };
     return new jPlayerPlaylist(cssSelector, playlist, options);
 };
 
 $(document).ready(function(){
     var myPlaylist1 = jPlayerCreate("1");
+    $("#jquery_jplayer_1").bind($.jPlayer.event.play, function() {
+        alert("play");
+        //store to localstorage current playlist
+    });
+    $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function() {
+//        alert("pause");
+    });
+    $("#jquery_jplayer_1").bind($.jPlayer.event.ended, function() {
+//        alert("ended");
+        var id = myPlaylist1.current - 1;
+        var song = {
+            title:myPlaylist1.playlist[id].title,
+            mp3:myPlaylist1.playlist[id].mp3
+        };
+        alert(myPlaylist1.current);
+        myPlaylist1.add(song);
+        myPlaylist1.remove(id);
+    });
     //---
     var myPlaylist2 = jPlayerCreate("2");
 });
