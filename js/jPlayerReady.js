@@ -34,14 +34,15 @@ function jPlayerCreate(jPlayerId) {
 
 $(document).ready(function(){
     var myPlaylist1 = jPlayerCreate("1");
-    $("#jquery_jplayer_1").bind($.jPlayer.event.play, function() {
+    var player1 = $("#jquery_jplayer_1");
+    player1.bind($.jPlayer.event.play, function() {
         alert("play");
         //store to localstorage current playlist
     });
-    $("#jquery_jplayer_1").bind($.jPlayer.event.pause, function() {
+    player1.bind($.jPlayer.event.pause, function() {
 //        alert("pause");
     });
-    $("#jquery_jplayer_1").bind($.jPlayer.event.ended, function() {
+    player1.bind($.jPlayer.event.ended, function() {
 //        alert("ended");
         var id = myPlaylist1.current - 1;
         var song = {
