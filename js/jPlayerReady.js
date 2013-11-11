@@ -9,8 +9,12 @@ $(document).ready(function(){
     var options = {
         swfPath : "./jPlayer",
         supplied : "mp3",
-        play : function() {
-            alert("Ready!");
+        play : function(time) {
+            alert("Play!");
+            $(this).jPlayer("pauseOthers");
+        },
+        pause : function(time) {
+            alert("Pause!");
         }
     };
     var playlist = [];
@@ -19,12 +23,19 @@ $(document).ready(function(){
 
     $.getJSON("./JSON/playlist.json",
         function(data) {
-            $.each(data["data"].tracks, function(index, value) {
+            for (var i = 0; i < data["data"].tracks.length; i++) {
+                var song = data["data"].tracks[i];
                 myPlaylist.add({
-                    title : value.title,
-                    mp3 : value.audio
+                    title: song.title,
+                    mp3: song.audio
                 });
-            })
+            }
+//            $.each(data["data"].tracks, function(index, value) {
+//                myPlaylist.add({
+//                    title : value.title,
+//                    mp3 : value.audio
+//                });
+//            })
         }
     );
     //---
