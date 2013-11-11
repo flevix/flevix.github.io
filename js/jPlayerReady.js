@@ -30,12 +30,6 @@ $(document).ready(function(){
                     mp3: song.audio
                 });
             }
-//            $.each(data["data"].tracks, function(index, value) {
-//                myPlaylist.add({
-//                    title : value.title,
-//                    mp3 : value.audio
-//                });
-//            })
         }
     );
     //---
