@@ -1496,11 +1496,13 @@
                 switch(eventType) {
                     case $.jPlayer.event.progress:
                         this._getFlashStatus(status);
+                        alert("ev-pr");
                         this._updateInterface();
                         this._trigger(eventType);
                         break;
                     case $.jPlayer.event.timeupdate:
                         this._getFlashStatus(status);
+                        alert("ev-tu");
                         this._updateInterface();
                         this._trigger(eventType);
                         break;
