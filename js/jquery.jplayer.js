@@ -1904,14 +1904,19 @@
             }
         },
         playHead: function(p) {
+            //XXX:playHead
             p = this._limitValue(p, 0, 100);
             if(this.status.srcSet) {
+                console.log("statusSrcSet");
                 if(this.html.active) {
+                    console.log("htmlActive");
                     this._html_playHead(p);
                 } else if(this.flash.active) {
+                    console.log("flashActive");
                     this._flash_playHead(p);
                 }
             } else {
+                console.log("urlNotSetError");
                 this._urlNotSetError("playHead");
             }
         },
@@ -2001,7 +2006,7 @@
                     y = $bar.height() - e.pageY + offset.top,
                     h = $bar.height();
                 //XXX:volumeBar
-                alert("volumeBar");
+                console.log("volumeBar");
                 if(this.options.verticalVolume) {
                     this.volume(y/h);
                 } else {
@@ -2126,6 +2131,8 @@
             }
         },
         seekBar: function(e) { // Handles clicks on the seekBar
+            //XXX:seekBar
+            console.log("seekBar");
             if(this.css.jq.seekBar.length) {
                 // Using $(e.currentTarget) to enable multiple seek bars
                 var $bar = $(e.currentTarget),
@@ -2134,6 +2141,11 @@
                     w = $bar.width(),
                     p = 100 * x / w;
                 this.playHead(p);
+                if (this.options.globalUpdate) {
+                    this.tellOthers("updateOthers", function() {
+                        this.playHead(p);
+                    })
+                }
             }
         },
         playBar: function() { // Handles clicks on the playBar
@@ -2839,14 +2851,24 @@
             }
         },
         _flash_playHead: function(p) {
+            //XXX:flash_playHead
             try {
+                console.log("flash_playHead_try");
                 this._getMovie().fl_play_head(p);
-            } catch(err) { this._flashError(err); }
-            if(!this.status.waitForLoad) {
-                this._flash_checkWaitForPlay();
+            } catch(err) {
+                console.log("flash_playHead_catch");
+                this._flashError(err);
             }
+            if(!this.status.waitForLoad) {
+                console.log("flash_playHead_!thisStatus");
+                this._flash_checkWaitForPlay();
+            } else {
+                console.log("updateOthersThis");
+            }
+            console.log("flash_playHead_exit");
         },
         _flash_checkWaitForPlay: function() {
+            console.log("flash_checkWait");
             if(this.status.waitForPlay) {
                 this.status.waitForPlay = false;
                 if(this.css.jq.videoPlay.length) {
@@ -2869,6 +2891,8 @@
             } catch(err) { this._flashError(err); }
         },
         _getMovie: function() {
+            //XXX:getMovie
+            console.log("getMovie");
             return document[this.internal.flash.id];
         },
         _getFlashPluginVersion: function() {
