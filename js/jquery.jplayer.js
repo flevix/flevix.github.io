@@ -611,7 +611,8 @@
             emulateHtml: false, // Emulates the HTML5 Media element on the jPlayer element.
             consoleAlerts: true, // Alerts are sent to the console.log() instead of alert().
             errorAlerts: false,
-            warningAlerts: false
+            warningAlerts: false,
+            globalUpdate: false
         },
         optionsAudio: {
             size: {
@@ -1494,16 +1495,19 @@
             }
             if(this.flash.gate) {
                 switch(eventType) {
+                    //XXX:switch_event_type
                     case $.jPlayer.event.progress:
                         this._getFlashStatus(status);
-                        alert("ev-pr");
+//                        alert("ev-pr");
                         this._updateInterface();
+                        this._updateOthersInterface(status);
                         this._trigger(eventType);
                         break;
                     case $.jPlayer.event.timeupdate:
                         this._getFlashStatus(status);
-                        alert("ev-tu");
+//                        alert("ev-tu");
                         this._updateInterface();
+                        this._updateOthersInterface(status);
                         this._trigger(eventType);
                         break;
                     case $.jPlayer.event.play:
@@ -1618,6 +1622,27 @@
                 }
             }
         },
+        tellOthers: function(command, conditions) {
+            var self = this,
+                hasConditions = typeof conditions === 'function',
+                args = Array.prototype.slice.call(arguments); // Convert arguments to an Array.
+
+            if(typeof command !== 'string') { // Ignore, since no command.
+                return; // Return undefined to maintain chaining.
+            }
+            if(hasConditions) {
+                args.splice(1, 1); // Remove the conditions from the arguments
+            }
+
+            $.each(this.instances, function() {
+                // Remember that "this" is the instance's "element" in the $.each() loop.
+                if(self.element !== this) { // Do not tell my instance.
+                    if(!hasConditions || conditions.call(this.data("jPlayer"), self)) {
+                        this.jPlayer.apply(this, args);
+                    }
+                }
+            });
+        },
         _updateInterface: function() {
             if(this.css.jq.seekBar.length) {
                 this.css.jq.seekBar.width(this.status.seekPercent+"%");
@@ -1636,6 +1661,30 @@
             }
             if(this.css.jq.duration.length) {
                 this.css.jq.duration.text(this._convertTime(this.status.duration));
+            }
+        },
+        _updateOthersInterface: function(status) {
+            //XXX:update_others
+//            alert("updateOthers");
+            if (this.options.globalUpdate) {
+                this.tellOthers("updateOthers", function() {
+                    this.status.seekPercent = status.seekPercent;
+                    this.status.currentPercentAbsolute = status.currentPercentAbsolute;
+                    this.status.currentPercentRelative = status.currentPercentRelative;
+                    this.status.currentTime = status.currentTime;
+                    this.status.duration = status.duration;
+
+                    this.css.jq.seekBar.width(this.status.seekPercent+"%");
+                    if(this.options.smoothPlayBar) {
+                        this.css.jq.playBar.stop().animate({
+                            width: this.status.currentPercentAbsolute+"%"
+                        }, 250, "linear");
+                    } else {
+                        this.css.jq.playBar.width(this.status.currentPercentRelative+"%");
+                    }
+                    this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
+                    this.css.jq.duration.text(this._convertTime(this.status.duration));
+                })
             }
         },
         _convertTime: ConvertTime.prototype.time,
@@ -1837,27 +1886,6 @@
                 this._urlNotSetError("pause");
             }
         },
-        tellOthers: function(command, conditions) {
-            var self = this,
-                hasConditions = typeof conditions === 'function',
-                args = Array.prototype.slice.call(arguments); // Convert arguments to an Array.
-
-            if(typeof command !== 'string') { // Ignore, since no command.
-                return; // Return undefined to maintain chaining.
-            }
-            if(hasConditions) {
-                args.splice(1, 1); // Remove the conditions from the arguments
-            }
-
-            $.each(this.instances, function() {
-                // Remember that "this" is the instance's "element" in the $.each() loop.
-                if(self.element !== this) { // Do not tell my instance.
-                    if(!hasConditions || conditions.call(this.data("jPlayer"), self)) {
-                        this.jPlayer.apply(this, args);
-                    }
-                }
-            });
-        },
         pauseOthers: function(time) {
             this.tellOthers("pause", function() {
                 // In the conditions function, the "this" context is the other instance's jPlayer object.
@@ -1972,6 +2000,8 @@
                     w = $bar.width(),
                     y = $bar.height() - e.pageY + offset.top,
                     h = $bar.height();
+                //XXX:volumeBar
+                alert("volumeBar");
                 if(this.options.verticalVolume) {
                     this.volume(y/h);
                 } else {

@@ -28,9 +28,10 @@ function jPlayerCreate(jPlayerId) {
         supplied : "mp3",
         loop : true,
         globalVolume: true
+        , globalUpdate: true
     };
     return new jPlayerPlaylist(cssSelector, playlist, options);
-};
+}
 
 $(document).ready(function(){
     var myPlaylist1 = jPlayerCreate("1");
