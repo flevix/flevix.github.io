@@ -1870,6 +1870,7 @@
                 }
             } else {
                 this._urlNotSetError("play");
+                console.log("playError");
             }
         },
         videoPlay: function() { // Handles clicks on the play button over the video poster
@@ -1905,9 +1906,10 @@
             }
         },
         stopOthers: function() {
+            //XXX:stopOthers
             this.tellOthers("stop", function() {
                 this.stop();
-                this.clearMedia();
+                this.setMedia(this.playlist[0]);
             });
         },
         playHead: function(p) {
@@ -2148,11 +2150,6 @@
                     w = $bar.width(),
                     p = 100 * x / w;
                 this.playHead(p);
-                if (this.options.globalUpdate) {
-                    this.tellOthers("updateOthers", function() {
-                        this.playHead(p);
-                    })
-                }
             }
         },
         playBar: function() { // Handles clicks on the playBar
