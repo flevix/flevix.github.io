@@ -1513,6 +1513,7 @@
                     case $.jPlayer.event.play:
                         this._seeked();
                         this._updateButtons(true);
+                        this.stopOthers();
                         this._trigger(eventType);
                         break;
                     case $.jPlayer.event.pause:
@@ -1902,6 +1903,11 @@
             } else {
                 this._urlNotSetError("stop");
             }
+        },
+        stopOthers: function() {
+            this.tellOthers("stop", function() {
+                this.stop();
+            });
         },
         playHead: function(p) {
             //XXX:playHead
