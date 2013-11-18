@@ -1907,6 +1907,7 @@
         stopOthers: function() {
             this.tellOthers("stop", function() {
                 this.stop();
+                this.clearMedia();
             });
         },
         playHead: function(p) {
