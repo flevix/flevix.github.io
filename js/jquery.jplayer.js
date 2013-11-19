@@ -1894,6 +1894,7 @@
         pauseOthers: function(time) {
             this.tellOthers("pause", function() {
                 // In the conditions function, the "this" context is the other instance's jPlayer object.
+                this.status.paused = true;
                 return this.status.srcSet;
             }, time);
         },
