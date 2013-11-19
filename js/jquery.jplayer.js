@@ -477,7 +477,7 @@
             solution: "html, flash", // Valid solutions: html, flash. Order defines priority. 1st is highest,
             supplied: "mp3", // Defines which formats jPlayer will try and support and the priority by the order. 1st is highest,
             preload: 'metadata',  // HTML5 Spec values: none, metadata, auto.
-            volume: 0.8, // The volume. Number 0 to 1.
+            volume: 0.2, // The volume. Number 0 to 1.
             muted: false,
             playbackRate: 1,
             defaultPlaybackRate: 1,
