@@ -1667,7 +1667,7 @@
         _updateOthersInterface: function(status) {
             //XXX:update_others
 //            alert("updateOthers");
-            if (this.options.globalUpdate) {
+            if (this.options.globalUpdate && !this.status.paused) {
                 this.tellOthers("updateOthers", function() {
                     this.status.seekPercent = status.seekPercent;
                     this.status.currentPercentAbsolute = status.currentPercentAbsolute;
@@ -2151,11 +2151,15 @@
                     x = e.pageX - offset.left,
                     w = $bar.width(),
                     p = 100 * x / w;
-                this.playHead(p);
+                if (!this.status.paused) {
+                    this.playHead(p);
+                }
                 if (this.options.globalUpdate) {
                     //it's need for changing seekBar from not HeadPlayer
                     this.tellOthers("updateOthers", function() {
-                       this.playHead(p);
+                        if (!this.status.paused) {
+                            this.playHead(p);
+                        }
                     });
                 }
             }
