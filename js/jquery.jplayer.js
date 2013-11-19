@@ -1907,10 +1907,12 @@
         },
         stopOthers: function() {
             //XXX:stopOthers
-            this.tellOthers("stop", function() {
-                this.stop();
-                this.setMedia(this.playlist[0]);
-            });
+            if (this.options.globalUpdate) {
+                this.tellOthers("stop", function() {
+                    this.stop();
+                    this.setMedia(this.playlist[0]);
+                });
+            }
         },
         playHead: function(p) {
             //XXX:playHead
@@ -2150,6 +2152,12 @@
                     w = $bar.width(),
                     p = 100 * x / w;
                 this.playHead(p);
+                if (this.options.globalUpdate) {
+                    //it's need for changing seekBar from not HeadPlayer
+                    this.tellOthers("updateOthers", function() {
+                       this.playHead(p);
+                    });
+                }
             }
         },
         playBar: function() { // Handles clicks on the playBar
