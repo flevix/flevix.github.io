@@ -1645,6 +1645,9 @@
             });
         },
         _updateInterface: function() {
+            if (this.status.paused) {
+                return;
+            }
             if(this.css.jq.seekBar.length) {
                 this.css.jq.seekBar.width(this.status.seekPercent+"%");
             }
