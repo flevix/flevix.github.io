@@ -1911,6 +1911,7 @@
                 this.tellOthers("stop", function() {
                     this.stop();
                     this.setMedia(this.playlist[0]);
+                    this.status.paused = true;
                 });
             }
         },
