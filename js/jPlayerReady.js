@@ -35,9 +35,10 @@ function jPlayerCreate(jPlayerId) {
 
 $(document).ready(function(){
     var myPlaylist1 = jPlayerCreate("1");
+    var myPlaylist2 = jPlayerCreate("2");
     var player1 = $("#jquery_jplayer_1");
     player1.bind($.jPlayer.event.ended, function() {
-//        alert("ended");
+        console.log("bind-ended");
         var id = myPlaylist1.current - 1;
         var song = {
             title:myPlaylist1.playlist[id].title,
@@ -46,6 +47,33 @@ $(document).ready(function(){
         myPlaylist1.add(song);
         myPlaylist1.remove(id);
     });
+    player1.bind($.jPlayer.event.progress, function() {
+        console.log("bind-progress");
+        var status = $(this).jPlayer("getStatus");
+        $(this).jPlayer("updateOthersInterface", status);
+
+        var data = {
+            "event":"progress",
+            "event_ts": Math.round(new Date().getTime() / 1000),
+            "status":status
+        }
+        localStorage.setItem("JPdata", JSON.stringify(data));
+    });
+    player1.bind($.jPlayer.event.timeupdate, function(event) {
+        console.log("bind-timeupdate");
+        var status = $(this).jPlayer("getStatus");
+        $(this).jPlayer("updateOthersInterface", status);
+
+        var data = {
+            "event":"timeupdate",
+            "event_ts": Math.round(new Date().getTime() / 1000),
+            "status":status
+        }
+        localStorage.setItem("JPdata", JSON.stringify(data));
+    });
+    player1.bind($.jPlayer.event.play, function() {
+        console.log("bind-play");
+    });
     //---
-    var myPlaylist2 = jPlayerCreate("2");
+
 });

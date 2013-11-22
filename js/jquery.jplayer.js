@@ -1498,22 +1498,18 @@
                     //XXX:switch_event_type
                     case $.jPlayer.event.progress:
                         this._getFlashStatus(status);
-//                        alert("ev-pr");
                         this._updateInterface();
-                        this._updateOthersInterface(status);
                         this._trigger(eventType);
                         break;
                     case $.jPlayer.event.timeupdate:
                         this._getFlashStatus(status);
-//                        alert("ev-tu");
                         this._updateInterface();
-                        this._updateOthersInterface(status);
                         this._trigger(eventType);
                         break;
                     case $.jPlayer.event.play:
                         this._seeked();
                         this._updateButtons(true);
-                        this.stopOthers();
+//                        this.stopOthers();
                         this._trigger(eventType);
                         break;
                     case $.jPlayer.event.pause:
@@ -1644,6 +1640,9 @@
                 }
             });
         },
+        getStatus: function() {
+            return this.status;
+        },
         _updateInterface: function() {
             if (this.status.paused) {
                 return;
@@ -1667,7 +1666,27 @@
                 this.css.jq.duration.text(this._convertTime(this.status.duration));
             }
         },
-        _updateOthersInterface: function(status) {
+        updInterf: function(status) {
+            //XXX:update_others/
+//            alert("updateOthers");
+                    this.status.seekPercent = status.seekPercent;
+                    this.status.currentPercentAbsolute = status.currentPercentAbsolute;
+                    this.status.currentPercentRelative = status.currentPercentRelative;
+                    this.status.currentTime = status.currentTime;
+                    this.status.duration = status.duration;
+
+                    this.css.jq.seekBar.width(this.status.seekPercent+"%");
+                    if(this.options.smoothPlayBar) {
+                        this.css.jq.playBar.stop().animate({
+                            width: this.status.currentPercentAbsolute+"%"
+                        }, 250, "linear");
+                    } else {
+                        this.css.jq.playBar.width(this.status.currentPercentRelative+"%");
+                    }
+                    this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
+                    this.css.jq.duration.text(this._convertTime(this.status.duration));
+        },
+        updateOthersInterface: function(status) {
             //XXX:update_others
 //            alert("updateOthers");
             if (this.options.globalUpdate && !this.status.paused) {
