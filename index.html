@@ -7,16 +7,7 @@
     <script type="text/javascript" src="js/jplayer.playlist.js"></script>
     <script type="text/javascript" src="js/jPlayerReady.js"></script>
     <script type="text/javascript">
-        function handleStorage() {
-            var data = JSON.parse(localStorage.getItem("JPdata"));
-            if (data.event == "timeupdate" || data.event == "progress") {
-                $("#jquery_jplayer_1").jPlayer("updInterf", data.status);
-                $("#jquery_jplayer_2").jPlayer("updInterf", data.status);
-            }
-            console.log("handle!");
-        }
 
-        window.addEventListener("storage", handleStorage, false);
     </script>
 </head>
 <body>

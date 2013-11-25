@@ -1509,7 +1509,6 @@
                     case $.jPlayer.event.play:
                         this._seeked();
                         this._updateButtons(true);
-//                        this.stopOthers();
                         this._trigger(eventType);
                         break;
                     case $.jPlayer.event.pause:
@@ -1667,46 +1666,28 @@
             }
         },
         updInterf: function(status) {
-            //XXX:update_others/
-//            alert("updateOthers");
-                    this.status.seekPercent = status.seekPercent;
-                    this.status.currentPercentAbsolute = status.currentPercentAbsolute;
-                    this.status.currentPercentRelative = status.currentPercentRelative;
-                    this.status.currentTime = status.currentTime;
-                    this.status.duration = status.duration;
+            //XXX:updInterf/
+            this.status.seekPercent = status.seekPercent;
+            this.status.currentPercentAbsolute = status.currentPercentAbsolute;
+            this.status.currentPercentRelative = status.currentPercentRelative;
+            this.status.currentTime = status.currentTime;
+            this.status.duration = status.duration;
 
-                    this.css.jq.seekBar.width(this.status.seekPercent+"%");
-                    if(this.options.smoothPlayBar) {
-                        this.css.jq.playBar.stop().animate({
-                            width: this.status.currentPercentAbsolute+"%"
-                        }, 250, "linear");
-                    } else {
-                        this.css.jq.playBar.width(this.status.currentPercentRelative+"%");
-                    }
-                    this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
-                    this.css.jq.duration.text(this._convertTime(this.status.duration));
+            this.css.jq.seekBar.width(this.status.seekPercent+"%");
+            if(this.options.smoothPlayBar) {
+                this.css.jq.playBar.stop().animate({
+                    width: this.status.currentPercentAbsolute+"%"
+                }, 250, "linear");
+            } else {
+                this.css.jq.playBar.width(this.status.currentPercentRelative+"%");
+            }
+            this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
+            this.css.jq.duration.text(this._convertTime(this.status.duration));
         },
         updateOthersInterface: function(status) {
-            //XXX:update_others
-//            alert("updateOthers");
             if (this.options.globalUpdate && !this.status.paused) {
                 this.tellOthers("updateOthers", function() {
-                    this.status.seekPercent = status.seekPercent;
-                    this.status.currentPercentAbsolute = status.currentPercentAbsolute;
-                    this.status.currentPercentRelative = status.currentPercentRelative;
-                    this.status.currentTime = status.currentTime;
-                    this.status.duration = status.duration;
-
-                    this.css.jq.seekBar.width(this.status.seekPercent+"%");
-                    if(this.options.smoothPlayBar) {
-                        this.css.jq.playBar.stop().animate({
-                            width: this.status.currentPercentAbsolute+"%"
-                        }, 250, "linear");
-                    } else {
-                        this.css.jq.playBar.width(this.status.currentPercentRelative+"%");
-                    }
-                    this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
-                    this.css.jq.duration.text(this._convertTime(this.status.duration));
+                    this.updInterf(status);
                 })
             }
         },
@@ -1928,18 +1909,7 @@
                 this._urlNotSetError("stop");
             }
         },
-        stopOthers: function() {
-            //XXX:stopOthers
-            if (this.options.globalUpdate) {
-                this.tellOthers("stop", function() {
-                    this.stop();
-                    this.setMedia(this.playlist[0]);
-                    this.status.paused = true;
-                });
-            }
-        },
         playHead: function(p) {
-            //XXX:playHead
             p = this._limitValue(p, 0, 100);
             if(this.status.srcSet) {
                 console.log("statusSrcSet");
@@ -2891,21 +2861,14 @@
             }
         },
         _flash_playHead: function(p) {
-            //XXX:flash_playHead
             try {
-                console.log("flash_playHead_try");
                 this._getMovie().fl_play_head(p);
             } catch(err) {
-                console.log("flash_playHead_catch");
                 this._flashError(err);
             }
             if(!this.status.waitForLoad) {
-                console.log("flash_playHead_!thisStatus");
                 this._flash_checkWaitForPlay();
-            } else {
-                console.log("updateOthersThis");
             }
-            console.log("flash_playHead_exit");
         },
         _flash_checkWaitForPlay: function() {
             console.log("flash_checkWait");
@@ -2931,8 +2894,6 @@
             } catch(err) { this._flashError(err); }
         },
         _getMovie: function() {
-            //XXX:getMovie
-            console.log("getMovie");
             return document[this.internal.flash.id];
         },
         _getFlashPluginVersion: function() {

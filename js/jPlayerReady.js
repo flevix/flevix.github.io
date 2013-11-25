@@ -33,19 +33,27 @@ function jPlayerCreate(jPlayerId) {
     return new jPlayerPlaylist(cssSelector, playlist, options);
 }
 
+var myPlaylist1;
+var myPlaylist2;
+
 $(document).ready(function(){
-    var myPlaylist1 = jPlayerCreate("1");
-    var myPlaylist2 = jPlayerCreate("2");
+    myPlaylist1 = jPlayerCreate("1");
+    myPlaylist2 = jPlayerCreate("2");
     var player1 = $("#jquery_jplayer_1");
+    player1.jPlayer("setJPlaylist", myPlaylist1);
+    var player2 = $("#jquery_jplayer_2");
+    player2.jPlayer("setJPlaylist", myPlaylist2);
+
     player1.bind($.jPlayer.event.ended, function() {
-        console.log("bind-ended");
-        var id = myPlaylist1.current - 1;
-        var song = {
-            title:myPlaylist1.playlist[id].title,
-            mp3:myPlaylist1.playlist[id].mp3
-        };
-        myPlaylist1.add(song);
-        myPlaylist1.remove(id);
+//        console.log("bind-ended");
+//        var id = myPlaylist1.current - 1;
+//        var song = {
+//            title:myPlaylist1.playlist[id].title,
+//            mp3:myPlaylist1.playlist[id].mp3
+//        };
+//        myPlaylist1.remove(id);
+//        myPlaylist1.add(song);
+//        myPlaylist2.setPlaylist(myPlaylist1.playlist);
     });
     player1.bind($.jPlayer.event.progress, function() {
         console.log("bind-progress");
@@ -56,10 +64,10 @@ $(document).ready(function(){
             "event":"progress",
             "event_ts": Math.round(new Date().getTime() / 1000),
             "status":status
-        }
+        };
         localStorage.setItem("JPdata", JSON.stringify(data));
     });
-    player1.bind($.jPlayer.event.timeupdate, function(event) {
+    player1.bind($.jPlayer.event.timeupdate, function() {
         console.log("bind-timeupdate");
         var status = $(this).jPlayer("getStatus");
         $(this).jPlayer("updateOthersInterface", status);
@@ -68,12 +76,35 @@ $(document).ready(function(){
             "event":"timeupdate",
             "event_ts": Math.round(new Date().getTime() / 1000),
             "status":status
-        }
+        };
         localStorage.setItem("JPdata", JSON.stringify(data));
     });
     player1.bind($.jPlayer.event.play, function() {
         console.log("bind-play");
+        myPlaylist2.select(myPlaylist1.current);
+        var data = {
+            "event":"play",
+            "event_ts": Math.round(new Date().getTime() / 1000),
+            "current":myPlaylist1.current
+        };
+        localStorage.setItem("JPdata", JSON.stringify(data));
     });
     //---
-
 });
+
+function handleStorage() {
+    var data = JSON.parse(localStorage.getItem("JPdata"));
+    if (data.event == "timeupdate" || data.event == "progress") {
+        $("#jquery_jplayer_1").jPlayer("updInterf", data.status);
+        $("#jquery_jplayer_2").jPlayer("updInterf", data.status);
+    }
+    if (data.event == "play") {
+        $("#jquery_jplayer_1").jPlayer("stop", data.status);
+        $("#jquery_jplayer_2").jPlayer("stop", data.status);
+        myPlaylist1.select(data.current);
+        myPlaylist2.select(data.current);
+    }
+    console.log("handle!");
+}
+
+window.addEventListener("storage", handleStorage, false);
