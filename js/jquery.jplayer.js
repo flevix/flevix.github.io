@@ -1912,7 +1912,6 @@
         playHead: function(p) {
             p = this._limitValue(p, 0, 100);
             if(this.status.srcSet) {
-                console.log("statusSrcSet");
                 if(this.html.active) {
                     console.log("htmlActive");
                     this._html_playHead(p);
@@ -1921,7 +1920,6 @@
                     this._flash_playHead(p);
                 }
             } else {
-                console.log("urlNotSetError");
                 this._urlNotSetError("playHead");
             }
         },
@@ -2138,6 +2136,7 @@
         seekBar: function(e) { // Handles clicks on the seekBar
             //XXX:seekBar
             console.log("seekBar");
+
             if(this.css.jq.seekBar.length) {
                 // Using $(e.currentTarget) to enable multiple seek bars
                 var $bar = $(e.currentTarget),
@@ -2147,6 +2146,15 @@
                     p = 100 * x / w;
                 if (!this.status.paused) {
                     this.playHead(p);
+                } else {
+                    //TODO:workaround :(
+                    var data = {
+                        "event":"seekBar",
+                        "event_ts": Math.round(new Date().getTime() / 1000),
+                        "p":p
+                    };
+                    localStorage.setItem("JPdata", JSON.stringify(data));
+                    //-----------
                 }
                 if (this.options.globalUpdate) {
                     //it's need for changing seekBar from not HeadPlayer

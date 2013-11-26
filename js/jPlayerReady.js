@@ -40,21 +40,8 @@ $(document).ready(function(){
     myPlaylist1 = jPlayerCreate("1");
     myPlaylist2 = jPlayerCreate("2");
     var player1 = $("#jquery_jplayer_1");
-    player1.jPlayer("setJPlaylist", myPlaylist1);
     var player2 = $("#jquery_jplayer_2");
-    player2.jPlayer("setJPlaylist", myPlaylist2);
 
-    player1.bind($.jPlayer.event.ended, function() {
-//        console.log("bind-ended");
-//        var id = myPlaylist1.current - 1;
-//        var song = {
-//            title:myPlaylist1.playlist[id].title,
-//            mp3:myPlaylist1.playlist[id].mp3
-//        };
-//        myPlaylist1.remove(id);
-//        myPlaylist1.add(song);
-//        myPlaylist2.setPlaylist(myPlaylist1.playlist);
-    });
     player1.bind($.jPlayer.event.progress, function() {
         console.log("bind-progress");
         var status = $(this).jPlayer("getStatus");
@@ -89,7 +76,12 @@ $(document).ready(function(){
         };
         localStorage.setItem("JPdata", JSON.stringify(data));
     });
-    //---
+    player1.bind($.jPlayer.event.seeking, function() {
+        console.log("bind-seeking");
+    });
+    player1.bind($.jPlayer.event.seeked, function() {
+        console.log("bind-seeked");
+    });
 });
 
 function handleStorage() {
@@ -97,14 +89,26 @@ function handleStorage() {
     if (data.event == "timeupdate" || data.event == "progress") {
         $("#jquery_jplayer_1").jPlayer("updInterf", data.status);
         $("#jquery_jplayer_2").jPlayer("updInterf", data.status);
-    }
-    if (data.event == "play") {
-        $("#jquery_jplayer_1").jPlayer("stop", data.status);
-        $("#jquery_jplayer_2").jPlayer("stop", data.status);
+    } else if (data.event == "play") {
+        $("#jquery_jplayer_1").jPlayer("stop");
+        $("#jquery_jplayer_2").jPlayer("stop");
         myPlaylist1.select(data.current);
         myPlaylist2.select(data.current);
+    } else if (data.event == "seekBar") {
+        $("#jquery_jplayer_1").jPlayer("playHead", data.p);
+        $("#jquery_jplayer_2").jPlayer("playHead", data.p);
     }
     console.log("handle!");
 }
 
 window.addEventListener("storage", handleStorage, false);
+
+
+window.onunload = function() {
+    var data = {
+        "event":"die",
+        "event_ts": Math.round(new Date().getTime() / 1000),
+        "status":$("#jquery_jplayer_1").jPlayer("getStatus")
+    };
+    localStorage.setItem("JPdata_", JSON.stringify(data));
+}
