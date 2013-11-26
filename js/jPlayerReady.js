@@ -50,7 +50,8 @@ $(document).ready(function(){
         var data = {
             "event":"progress",
             "event_ts": Math.round(new Date().getTime() / 1000),
-            "status":status
+            "status":status,
+            "current":myPlaylist1.current
         };
         localStorage.setItem("JPdata", JSON.stringify(data));
     });
@@ -62,7 +63,8 @@ $(document).ready(function(){
         var data = {
             "event":"timeupdate",
             "event_ts": Math.round(new Date().getTime() / 1000),
-            "status":status
+            "status":status,
+            "current":myPlaylist1.current
         };
         localStorage.setItem("JPdata", JSON.stringify(data));
     });
@@ -92,6 +94,13 @@ $(document).ready(function(){
     player1.bind($.jPlayer.event.seeked, function() {
         console.log("bind-seeked");
     });
+    var data = JSON.parse(localStorage.getItem("JPdata"));
+    if (data.event == "timeupdate" || data.event == "progress") {
+        $("#jquery_jplayer_1").jPlayer("updInterf", data.status);
+        $("#jquery_jplayer_2").jPlayer("updInterf", data.status);
+        myPlaylist1.select(data.current);
+        myPlaylist2.select(data.current);
+    }
 });
 
 function handleStorage() {
