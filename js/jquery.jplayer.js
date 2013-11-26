@@ -1642,6 +1642,9 @@
         getStatus: function() {
             return this.status;
         },
+        getVolume: function() {
+            return this.options.volume;
+        },
         _updateInterface: function() {
             if (this.status.paused) {
                 return;

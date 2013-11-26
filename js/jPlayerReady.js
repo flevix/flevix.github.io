@@ -76,6 +76,16 @@ $(document).ready(function(){
         };
         localStorage.setItem("JPdata", JSON.stringify(data));
     });
+    player1.bind($.jPlayer.event.volumechange, function() {
+        console.log("bind-volumechange");
+        var volume = $(this).jPlayer("getVolume");
+        var data = {
+            "event":"volumechange",
+            "event_ts": Math.round(new Date().getTime() / 1000),
+            "volume":volume
+        };
+        localStorage.setItem("JPdata", JSON.stringify(data));
+    });
     player1.bind($.jPlayer.event.seeking, function() {
         console.log("bind-seeking");
     });
@@ -97,6 +107,9 @@ function handleStorage() {
     } else if (data.event == "seekBar") {
         $("#jquery_jplayer_1").jPlayer("playHead", data.p);
         $("#jquery_jplayer_2").jPlayer("playHead", data.p);
+    } else if (data.event == "volumechange") {
+        $("#jquery_jplayer_1").jPlayer("volume", data.volume);
+        $("#jquery_jplayer_2").jPlayer("volume", data.volume);
     }
     console.log("handle!");
 }
