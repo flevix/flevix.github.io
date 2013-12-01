@@ -103,6 +103,27 @@
     </td>
 </table>
 
+<script type="text/javascript">
+    function openNtabs(n) {
+        for (var i = 0; i < n; i++) {
+            openTab();
+        }
+    }
+    function openTab() {
+        window.open("index.html");
+    }
+</script>
+
+<div class="buttons" id="buttons">
+    <script type="text/javascript">
+        var ua = navigator.userAgent;
+        if (ua.indexOf("Opera") != -1 || ua.indexOf("Firefox") != -1) {
+            document.write("<button onclick='openNtabs(3)'>Open 3 tabs</button>");
+        } else {
+            document.write("<button onclick='openNtabs(1)'>Open new tab</button>");
+        }
+    </script>
+</div>
 
 </body>
 </html>
