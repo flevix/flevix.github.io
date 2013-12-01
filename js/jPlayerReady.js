@@ -89,13 +89,6 @@ $(document).ready(function(){
             "current":myPlaylist1.current
         };
         localStorage.setItem("JPdata", JSON.stringify(data));
-
-        var poll = {
-            "event":"poll",
-            "event_ts": Math.round(new Date().getTime() / 1000),
-            "status":[]
-        };
-        localStorage.setItem("JPdata_", JSON.stringify(poll));
     });
     player1.bind($.jPlayer.event.volumechange, function() {
         console.log("bind-volumechange");
@@ -115,14 +108,20 @@ $(document).ready(function(){
     });
     var data = JSON.parse(localStorage.getItem("JPdata"));
     if (data.event == "timeupdate" || data.event == "progress") {
-        $("#jquery_jplayer_1").jPlayer("updInterf", data.status);
-        $("#jquery_jplayer_2").jPlayer("updInterf", data.status);
         myPlaylist1.select(data.current);
         myPlaylist2.select(data.current);
     }
 });
 
 document.write("PlayerID " + playerID);
+
+function playAfterDie() {
+    var poll = JSON.parse(localStorage.getItem("JPdata_"));
+    if (poll.status == playerID) {
+        $("#jquery_jplayer_1").jPlayer("play", poll.currentTime);
+    }
+    localStorage.removeItem("JPdata_");
+}
 
 function handleStorage() {
     var data = JSON.parse(localStorage.getItem("JPdata"));
@@ -134,10 +133,6 @@ function handleStorage() {
         $("#jquery_jplayer_2").jPlayer("stop");
         myPlaylist1.select(data.current);
         myPlaylist2.select(data.current);
-
-        var poll = JSON.parse(localStorage.getItem("JPdata_"));
-        poll.status.push({id:playerID});
-        localStorage.setItem("JPdata_", JSON.stringify(poll));
     } else if (data.event == "seekBar") {
         $("#jquery_jplayer_1").jPlayer("playHead", data.p);
         $("#jquery_jplayer_2").jPlayer("playHead", data.p);
@@ -145,12 +140,32 @@ function handleStorage() {
         $("#jquery_jplayer_1").jPlayer("volume", data.volume);
         $("#jquery_jplayer_2").jPlayer("volume", data.volume);
     }
+    var poll = JSON.parse(localStorage.getItem("JPdata_"));
+    if (poll != null) {
+        if (poll.status == 0) {
+            poll.status = playerID;
+            localStorage.setItem("JPdata_", JSON.stringify(poll));
+            setTimeout(playAfterDie, 100);
+        }
+    }
     console.log("handle!");
 }
 
 window.addEventListener("storage", handleStorage, false);
 
-
+window.onbeforeunload = function() {
+    var st = $("#jquery_jplayer_1").jPlayer("getStatus");
+    if (!st.paused) {
+        var poll = {
+            "event":"poll",
+            "event_ts": Math.round(new Date().getTime() / 1000),
+            "status":0,
+            "currentTime":st.currentTime
+        };
+        localStorage.setItem("JPdata_", JSON.stringify(poll));
+    }
+}
+//
 //window.onunload = function() {
 //    var data = {
 //        "event":"die",
