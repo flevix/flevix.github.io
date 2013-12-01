@@ -33,9 +33,20 @@ function jPlayerCreate(jPlayerId) {
     return new jPlayerPlaylist(cssSelector, playlist, options);
 }
 
+function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+};
+
+function guid() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
 var myPlaylist1;
 var myPlaylist2;
-var playerID = Math.round(new Date().getTime() / 100);
+var playerID = guid();
 
 $(document).ready(function(){
     myPlaylist1 = jPlayerCreate("1");
