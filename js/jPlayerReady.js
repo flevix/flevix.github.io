@@ -35,6 +35,7 @@ function jPlayerCreate(jPlayerId) {
 
 var myPlaylist1;
 var myPlaylist2;
+var playerID = Math.round(new Date().getTime() / 100);
 
 $(document).ready(function(){
     myPlaylist1 = jPlayerCreate("1");
@@ -77,6 +78,13 @@ $(document).ready(function(){
             "current":myPlaylist1.current
         };
         localStorage.setItem("JPdata", JSON.stringify(data));
+
+        var poll = {
+            "event":"poll",
+            "event_ts": Math.round(new Date().getTime() / 1000),
+            "status":[]
+        };
+        localStorage.setItem("JPdata_", JSON.stringify(poll));
     });
     player1.bind($.jPlayer.event.volumechange, function() {
         console.log("bind-volumechange");
@@ -103,6 +111,8 @@ $(document).ready(function(){
     }
 });
 
+document.write("PlayerID " + playerID);
+
 function handleStorage() {
     var data = JSON.parse(localStorage.getItem("JPdata"));
     if (data.event == "timeupdate" || data.event == "progress") {
@@ -113,6 +123,10 @@ function handleStorage() {
         $("#jquery_jplayer_2").jPlayer("stop");
         myPlaylist1.select(data.current);
         myPlaylist2.select(data.current);
+
+        var poll = JSON.parse(localStorage.getItem("JPdata_"));
+        poll.status.push({id:playerID});
+        localStorage.setItem("JPdata_", JSON.stringify(poll));
     } else if (data.event == "seekBar") {
         $("#jquery_jplayer_1").jPlayer("playHead", data.p);
         $("#jquery_jplayer_2").jPlayer("playHead", data.p);
@@ -126,11 +140,11 @@ function handleStorage() {
 window.addEventListener("storage", handleStorage, false);
 
 
-window.onunload = function() {
-    var data = {
-        "event":"die",
-        "event_ts": Math.round(new Date().getTime() / 1000),
-        "status":$("#jquery_jplayer_1").jPlayer("getStatus")
-    };
-    localStorage.setItem("JPdata_", JSON.stringify(data));
-}
+//window.onunload = function() {
+//    var data = {
+//        "event":"die",
+//        "event_ts": Math.round(new Date().getTime() / 1000),
+//        "status":{}
+//    };
+//    localStorage.setItem("JPdata_", JSON.stringify(data));
+//}
