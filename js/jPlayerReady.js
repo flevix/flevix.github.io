@@ -47,6 +47,7 @@ function guid() {
 var myPlaylist1;
 var myPlaylist2;
 var playerID = guid();
+document.write("PlayerID " + playerID);
 
 $(document).ready(function(){
     myPlaylist1 = jPlayerCreate("1");
@@ -57,6 +58,9 @@ $(document).ready(function(){
     player1.bind($.jPlayer.event.progress, function() {
         console.log("bind-progress");
         var status = $(this).jPlayer("getStatus");
+        if (status.paused) {
+            return;
+        }
         $(this).jPlayer("updateOthersInterface", status);
 
         var data = {
@@ -70,6 +74,9 @@ $(document).ready(function(){
     player1.bind($.jPlayer.event.timeupdate, function() {
         console.log("bind-timeupdate");
         var status = $(this).jPlayer("getStatus");
+        if (status.paused) {
+            return;
+        }
         $(this).jPlayer("updateOthersInterface", status);
 
         var data = {
@@ -113,32 +120,36 @@ $(document).ready(function(){
     }
 });
 
-document.write("PlayerID " + playerID);
-
 function playAfterDie() {
     var poll = JSON.parse(localStorage.getItem("JPdata_"));
-    if (poll.status == playerID) {
-        $("#jquery_jplayer_1").jPlayer("play", poll.currentTime);
+    if (poll != null) {
+        console.log("poll");
+        if (poll.status == playerID) {
+            $("#jquery_jplayer_1").jPlayer("play", poll.currentTime);
+            console.log(poll.currentTime);
+            localStorage.removeItem("JPdata_");
+        }
     }
-    localStorage.removeItem("JPdata_");
 }
 
 function handleStorage() {
     var data = JSON.parse(localStorage.getItem("JPdata"));
-    if (data.event == "timeupdate" || data.event == "progress") {
-        $("#jquery_jplayer_1").jPlayer("updInterf", data.status);
-        $("#jquery_jplayer_2").jPlayer("updInterf", data.status);
-    } else if (data.event == "play") {
-        $("#jquery_jplayer_1").jPlayer("stop");
-        $("#jquery_jplayer_2").jPlayer("stop");
-        myPlaylist1.select(data.current);
-        myPlaylist2.select(data.current);
-    } else if (data.event == "seekBar") {
-        $("#jquery_jplayer_1").jPlayer("playHead", data.p);
-        $("#jquery_jplayer_2").jPlayer("playHead", data.p);
-    } else if (data.event == "volumechange") {
-        $("#jquery_jplayer_1").jPlayer("volume", data.volume);
-        $("#jquery_jplayer_2").jPlayer("volume", data.volume);
+    if (data != null) {
+        if (data.event == "timeupdate" || data.event == "progress") {
+            $("#jquery_jplayer_1").jPlayer("updInterf", data.status);
+            $("#jquery_jplayer_2").jPlayer("updInterf", data.status);
+        } else if (data.event == "play") {
+            $("#jquery_jplayer_1").jPlayer("stop");
+            $("#jquery_jplayer_2").jPlayer("stop");
+            myPlaylist1.select(data.current);
+            myPlaylist2.select(data.current);
+        } else if (data.event == "seekBar") {
+            $("#jquery_jplayer_1").jPlayer("playHead", data.p);
+            $("#jquery_jplayer_2").jPlayer("playHead", data.p);
+        } else if (data.event == "volumechange") {
+            $("#jquery_jplayer_1").jPlayer("volume", data.volume);
+            $("#jquery_jplayer_2").jPlayer("volume", data.volume);
+        }
     }
     var poll = JSON.parse(localStorage.getItem("JPdata_"));
     if (poll != null) {
