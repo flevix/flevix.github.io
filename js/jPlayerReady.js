@@ -1,5 +1,6 @@
 /**
- * Created by flevix on 08.11.13.
+ * Created by flevix on 08.11.13
+ * Last modified on 02.12.13.
  */
 
 function jPlayerCreate(jPlayerId) {
@@ -37,7 +38,7 @@ function s4() {
     return Math.floor((1 + Math.random()) * 0x10000)
         .toString(16)
         .substring(1);
-};
+}
 
 function guid() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
@@ -45,15 +46,14 @@ function guid() {
 }
 
 var myPlaylist1;
-var myPlaylist2;
+var player1;
 var playerID = guid();
-document.write("PlayerID " + playerID);
+
+document.write("<div id='jID' style='color: white'>PlayerID: " + playerID + "</div>");
 
 $(document).ready(function(){
     myPlaylist1 = jPlayerCreate("1");
-    myPlaylist2 = jPlayerCreate("2");
-    var player1 = $("#jquery_jplayer_1");
-    var player2 = $("#jquery_jplayer_2");
+    player1 = $("#jquery_jplayer_1");
 
     player1.bind($.jPlayer.event.progress, function() {
         console.log("bind-progress");
@@ -61,8 +61,6 @@ $(document).ready(function(){
         if (status.paused) {
             return;
         }
-        $(this).jPlayer("updateOthersInterface", status);
-
         var data = {
             "event":"progress",
             "event_ts": Math.round(new Date().getTime() / 1000),
@@ -77,8 +75,6 @@ $(document).ready(function(){
         if (status.paused) {
             return;
         }
-        $(this).jPlayer("updateOthersInterface", status);
-
         var data = {
             "event":"timeupdate",
             "event_ts": Math.round(new Date().getTime() / 1000),
@@ -89,7 +85,6 @@ $(document).ready(function(){
     });
     player1.bind($.jPlayer.event.play, function() {
         console.log("bind-play");
-        myPlaylist2.select(myPlaylist1.current);
         var data = {
             "event":"play",
             "event_ts": Math.round(new Date().getTime() / 1000),
@@ -107,16 +102,12 @@ $(document).ready(function(){
         };
         localStorage.setItem("JPdata", JSON.stringify(data));
     });
-    player1.bind($.jPlayer.event.seeking, function() {
-        console.log("bind-seeking");
-    });
-    player1.bind($.jPlayer.event.seeked, function() {
-        console.log("bind-seeked");
-    });
     var data = JSON.parse(localStorage.getItem("JPdata"));
-    if (data.event == "timeupdate" || data.event == "progress") {
-        myPlaylist1.select(data.current);
-        myPlaylist2.select(data.current);
+    if (data != null) {
+        if (data.event == "timeupdate" || data.event == "progress" || data.event == "play") {
+            $("#jquery_jplayer_1").jPlayer("updateInterface", data.status);
+            myPlaylist1.select(data.current);
+        }
     }
 });
 
@@ -127,34 +118,27 @@ function playAfterDie() {
         if (poll.status == playerID) {
             $("#jquery_jplayer_1").jPlayer("play", poll.currentTime);
             console.log(poll.currentTime);
-            localStorage.removeItem("JPdata_");
         }
     }
 }
 
-function handleStorage() {
-    var data = JSON.parse(localStorage.getItem("JPdata"));
-    if (data != null) {
+function handleStorage(e) {
+    if (e.key == "JPdata" && e.newValue != null) {
+        var data = JSON.parse(e.newValue);
         if (data.event == "timeupdate" || data.event == "progress") {
-            $("#jquery_jplayer_1").jPlayer("updInterf", data.status);
-            $("#jquery_jplayer_2").jPlayer("updInterf", data.status);
+            $("#jquery_jplayer_1").jPlayer("updateInterface", data.status);
         } else if (data.event == "play") {
             $("#jquery_jplayer_1").jPlayer("stop");
-            $("#jquery_jplayer_2").jPlayer("stop");
             myPlaylist1.select(data.current);
-            myPlaylist2.select(data.current);
         } else if (data.event == "seekBar") {
             $("#jquery_jplayer_1").jPlayer("playHead", data.p);
-            $("#jquery_jplayer_2").jPlayer("playHead", data.p);
         } else if (data.event == "volumechange") {
             $("#jquery_jplayer_1").jPlayer("volume", data.volume);
-            $("#jquery_jplayer_2").jPlayer("volume", data.volume);
         }
-    }
-    var poll = JSON.parse(localStorage.getItem("JPdata_"));
-    if (poll != null) {
-        if (poll.status == 0) {
-            poll.status = playerID;
+    } else if (e.key == "JPdata_" && e.newValue != null) {
+        var poll = JSON.parse(e.newValue);
+        if (poll.status == "") {
+            poll.status = "" + playerID;
             localStorage.setItem("JPdata_", JSON.stringify(poll));
             setTimeout(playAfterDie, 100);
         }
@@ -170,18 +154,9 @@ window.onbeforeunload = function() {
         var poll = {
             "event":"poll",
             "event_ts": Math.round(new Date().getTime() / 1000),
-            "status":0,
+            "status":"",
             "currentTime":st.currentTime
         };
         localStorage.setItem("JPdata_", JSON.stringify(poll));
     }
 }
-//
-//window.onunload = function() {
-//    var data = {
-//        "event":"die",
-//        "event_ts": Math.round(new Date().getTime() / 1000),
-//        "status":{}
-//    };
-//    localStorage.setItem("JPdata_", JSON.stringify(data));
-//}

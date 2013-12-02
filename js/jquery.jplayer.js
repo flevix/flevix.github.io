@@ -1668,7 +1668,7 @@
                 this.css.jq.duration.text(this._convertTime(this.status.duration));
             }
         },
-        updInterf: function(status) {
+        updateInterface: function(status) {
             //XXX:updInterf/
             this.status.seekPercent = status.seekPercent;
             this.status.currentPercentAbsolute = status.currentPercentAbsolute;
@@ -1686,13 +1686,6 @@
             }
             this.css.jq.currentTime.text(this._convertTime(this.status.currentTime));
             this.css.jq.duration.text(this._convertTime(this.status.duration));
-        },
-        updateOthersInterface: function(status) {
-            if (this.options.globalUpdate && !this.status.paused) {
-                this.tellOthers("updateOthers", function() {
-                    this.updInterf(status);
-                })
-            }
         },
         _convertTime: ConvertTime.prototype.time,
         _seeking: function() {

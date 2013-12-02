@@ -292,22 +292,6 @@ ul.jp-toggles li a{
 	background: url("jplayer.pink.flag.jpg") -90px -420px no-repeat;
 }
 
-.jp-repeat {
-	background: url("jplayer.pink.flag.jpg") 0 -440px no-repeat;
-}
-
-.jp-repeat:hover {
-	background: url("jplayer.pink.flag.jpg") -30px -440px no-repeat;
-}
-
-.jp-repeat-off {
-	background: url("jplayer.pink.flag.jpg") -60px -440px no-repeat;
-}
-
-.jp-repeat-off:hover {
-	background: url("jplayer.pink.flag.jpg") -90px -440px no-repeat;
-}
-
 .jp-shuffle {
 	background: url("jplayer.pink.flag.jpg") 0 -460px no-repeat;
 	margin-left: 5px;
