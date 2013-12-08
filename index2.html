@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title> Binary Calc </title>
+    <style>
+        input {
+            max-width : 60px;
+        }
+    </style>
+    <script text="text/javascript">
+        "use strict"
+
+        function isBin(str) {
+            return str.search(/[^01]/) == -1;
+        }
+        
+        function ba(x, y) {
+            return (parseInt(x, 2) + parseInt(y, 2)).toString(2);
+        }
+        
+        function bm(x, y) {
+            return (parseInt(x, 2) * parseInt(y, 2)).toString(2);
+        }
+        
+        function bf(x) {
+            x = parseInt(x, 2);
+            if (x < 1) {
+                return 'value must be positive';
+            }
+            for (var f = 1; x != 1; f *= x, x--) /* empty body */ ;
+            return f.toString(2);
+        }
+        
+        function isValidBin(s) {
+            var x = parseInt(s);
+            var bin = isBin(s)
+            return bin && !isNaN(x);
+        }
+        
+        function badd() {
+            var p = document.getElementById('a');
+            var a1 = document.getElementById('a1');
+            var a2 = document.getElementById('a2');
+            if (!isValidBin(a1.value)) {
+                p.innerHTML = 'Bad first value';
+            } else if (!isValidBin(a2.value)) {
+                p.innerHTML = 'Bad second value';
+            } else {
+                p.innerHTML = ba(a1.value, a2.value);
+            }
+            p.style.visibility = 'visible';
+        }
+        
+        function bmul() {
+            var p = document.getElementById('m');
+            var m1 = document.getElementById('m1');
+            var m2 = document.getElementById('m2');
+            if (!isValidBin(m1.value)) {
+                p.innerHTML = 'Bad first value';
+            } else if (!isValidBin(m2.value)) {
+                p.innerHTML = 'Bad second value';
+            } else {
+                p.innerHTML = bm(m1.value, m2.value);
+            }
+            p.style.visibility = 'visible';
+        }
+        
+        function bfac() {
+            var p = document.getElementById('f');
+            var f1 = document.getElementById('f1');
+            if (!isValidBin(f1.value)) {
+                p.innerHTML = 'Bad value';
+            } else {
+                p.innerHTML = bf(f1.value);
+            }
+            p.style.visibility = 'visible';
+        }
+    </script>
+</head>
+<body>
+    <table cellspacing="10" frame="border" rules="cols" cellpadding="10">
+        <tr>
+            <th> Binary addition </th>
+            <th> Binary multiplication </th>
+            <th> Binary factorial </th>
+        </tr>
+        <tr>
+            <td>
+                <input id="a1" maxlength="6" value="10"></input>
+                <input id="a2" maxlength="6" value="11"></input>
+            </td>
+            <td>
+                <input id="m1" maxlength="6" value="10"></input>
+                <input id="m2" maxlength="6" value="11"></input>
+            </td>
+            <td>
+                <input id="f1" maxlength="6" value="10"></input>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button onclick="badd()"> Compute </button>
+            </td>
+            <td>
+                <button onclick="bmul()"> Compute </button>
+            </td>
+            <td>
+                <button onclick="bfac()"> Compute </button>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p id="a" style="visibility : hidden">12</p>
+            </td>
+            <td>
+                <p id="m" style="visibility : hidden"></p>
+            </td>
+            <td>
+                <p id="f" style="visibility : hidden"></p>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
