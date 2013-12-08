@@ -2,12 +2,20 @@
 <html>
 <head>
     <title> Binary Calc </title>
+    <meta charset="utf-8">
     <style>
         input {
             max-width : 60px;
         }
+        table {
+            border-collapse : collapse;
+        }
+        td, th, table {
+            padding : 10px;
+            border : 1px solid green;
+        }
     </style>
-    <script text="text/javascript">
+    <script type="text/javascript">
         "use strict"
 
         function isBin(str) {
@@ -78,7 +86,7 @@
     </script>
 </head>
 <body>
-    <table cellspacing="10" frame="border" rules="cols" cellpadding="10">
+    <table>
         <tr>
             <th> Binary addition </th>
             <th> Binary multiplication </th>
@@ -86,15 +94,15 @@
         </tr>
         <tr>
             <td>
-                <input id="a1" maxlength="6" value="10"></input>
-                <input id="a2" maxlength="6" value="11"></input>
+                <input id="a1" maxlength="6" value="10" />
+                <input id="a2" maxlength="6" value="11" />
             </td>
             <td>
-                <input id="m1" maxlength="6" value="10"></input>
-                <input id="m2" maxlength="6" value="11"></input>
+                <input id="m1" maxlength="6" value="10" />
+                <input id="m2" maxlength="6" value="11" />
             </td>
             <td>
-                <input id="f1" maxlength="6" value="10"></input>
+                <input id="f1" maxlength="6" value="10" />
             </td>
         </tr>
         <tr>
