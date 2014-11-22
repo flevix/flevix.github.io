@@ -9,8 +9,8 @@ flevix.github.io
 Simple binary calc on javascript
 
 * addition
-  * multiplication
-    * factorial
+* multiplication
+* factorial
 
 [heat.html](http://flevix.github.io/heat.html)
 ----
